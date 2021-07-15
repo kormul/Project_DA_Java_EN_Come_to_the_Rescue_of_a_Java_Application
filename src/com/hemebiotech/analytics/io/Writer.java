@@ -9,7 +9,7 @@ import com.hemebiotech.analytics.Symptom;
 /**
  * Class which will write to a file
  */
-public class Writter {
+public class Writer {
 	
 	FileWriter writer;
 	
@@ -17,7 +17,7 @@ public class Writter {
 	 * 
 	 * @param path file path 
 	 */
-	public Writter(String path) {
+	public Writer(String path) {
 		try {
 			this.writer =  new FileWriter(path);
 		} catch (IOException e) {
