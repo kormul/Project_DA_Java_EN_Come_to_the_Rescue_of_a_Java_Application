@@ -15,16 +15,20 @@ import com.hemebiotech.analytics.Symptom;
 public class Reader {
 	
 	/**
-	 * The path of the file 
+	 * The BufferedRead of class
 	 */
+	private BufferedReader reader;
 	
-	private String path;
 	/**
 	 * 
 	 * @param path  file path 
 	 */
 	public Reader(String path) {
-		this.setPath(path);
+		try {
+			this.reader = new BufferedReader(new FileReader(path));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -32,65 +36,32 @@ public class Reader {
 	 * @return a arrayList with symptom
 	 */
 	public ArrayList<Symptom> readSymptomDataFromFile() {
-		
 		ArrayList<Symptom> symptoms= new ArrayList<>();
 		
-			FileReader file;
-			try {
-				file = new FileReader(path);
-			} catch (FileNotFoundException e) {
-				System.out.println("File not found.");
-				return symptoms;
-			}
-		
-			BufferedReader reader = new BufferedReader(file);
+		try {
+			String line = reader.readLine();
+			
+			while(line != null) {
+				boolean check = true;
+				for(Symptom symptom : symptoms) {
+					if(symptom.getName().equalsIgnoreCase(line)) {
+						check = false;
+						symptom.setCount(symptom.getCount()+1);
+					}
 
-			String line;
-			try {
+				}
+				if(check) {
+					symptoms.add(new Symptom(line));
+				}
 				
 				line = reader.readLine();
-				while(line != null) {
-					boolean check = true;
-					for(Symptom symptom : symptoms) {
-						if(symptom.getName().equalsIgnoreCase(line)) {
-							check = false;
-							symptom.setCount(symptom.getCount()+1);
-						}
-
-					}
-					if(check) {
-						symptoms.add(new Symptom(line));
-					}
-					
-					line = reader.readLine();
-				}
-			} catch (IOException e) {
-				System.out.println("an error while reading the file has occurred.");
-			}
-			finally{
-				try {
-					reader.close();
-				} catch (IOException e) {
-					System.out.println("an error while closing the file has occurred.");
-				}
-			}
-		return symptoms;
-	}
+			}	
+			reader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	
-	/**
-	 * Gets path
-	 * @return path
-	 */
-	public String getPath() {
-		return path;
-	}
-
-	/**
-	 * Set path
-	 * @param New path
-	 */
-	public void setPath(String path) {
-		this.path = path;
+		return symptoms;
 	}
 
 
