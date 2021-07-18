@@ -20,7 +20,6 @@ public class Writer {
 	public Writer(String path) {
 		try {
 			this.writer =  new FileWriter(path);
-			this.writer = null;
 		} catch (IOException e) {
 			System.out.println("an error while opening the file has occured.");
 		}
