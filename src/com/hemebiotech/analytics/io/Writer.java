@@ -11,7 +11,7 @@ import com.hemebiotech.analytics.Symptom;
  */
 public class Writer {
 	
-	FileWriter writer;
+	private FileWriter writer;
 	
 	/**
 	 * 
@@ -21,7 +21,7 @@ public class Writer {
 		try {
 			this.writer =  new FileWriter(path);
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("an error while opening the file has occured.");
 		}
 	}
 	
@@ -31,24 +31,29 @@ public class Writer {
 	 * @return True if the operation was successful
 	 */
 	public boolean writeSymptomDataFromFile(ArrayList<Symptom> symptoms) {
-		try {
-			if(symptoms == null || symptoms.size() == 0) {
-				writer.close();
-				return true;
-			}
-			
-			for(Symptom symptom : symptoms) {
-				writer.write(symptom.getName()+": "+symptom.getCount()+"\n");
-			}
-			
-			writer.close();
-			
-		} catch (IOException e) {
-			e.printStackTrace();
+		boolean success = true;
+		if(writer == null ) {
 			return false;
 		}
-		
-		return true;
+		try {
+			if(!(symptoms == null || symptoms.size() == 0)){
+				for(Symptom symptom : symptoms) {
+					writer.write(symptom.getName()+": "+symptom.getCount()+"\n");
+				}
+			}
+		} catch (IOException e) {
+			System.out.println("an error while writing the file has occured.");
+			success = false;
+		}
+		finally {
+			try {
+				writer.close();
+			} catch (IOException e) {
+				System.out.println("an error while closing the file has occured.");
+				success = false;
+			}
+		}
+		return success;
 	}
 	 
 	/**
